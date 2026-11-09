@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IELTS Study Tracker</title>
+<style>
+:root{--bg1:#fff4e6;--bg2:#e8f4ff;--card:#ffffff;--text:#1d2433;--muted:#667085;--line:#ece6f3;--p:#7c3aed;--p2:#ec4899;--g:#10b981;--o:#f59e0b;--b:#3b82f6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#1b1233;--bg2:#0e2036;--card:#1c2433;--text:#f1f4fa;--muted:#a3adc2;--line:#2c3650;--p:#a78bfa;--p2:#f472b6;--g:#34d399;--o:#fbbf24;--b:#60a5fa;color-scheme:dark}}
+:root[data-theme="dark"]{--bg1:#1b1233;--bg2:#0e2036;--card:#1c2433;--text:#f1f4fa;--muted:#a3adc2;--line:#2c3650;--p:#a78bfa;--p2:#f472b6;--g:#34d399;--o:#fbbf24;--b:#60a5fa;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;background:linear-gradient(160deg,var(--bg1),var(--bg2)) fixed}
+.wrap{max-width:560px;margin:0 auto;padding:18px 16px 40px}
+.hero{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border-radius:22px;padding:20px;margin-bottom:14px;box-shadow:0 10px 30px rgba(124,58,237,.25)}
+.hero h1{font-size:22px;margin:0 0 6px}
+.hero p{margin:0;font-size:15px;opacity:.95;min-height:42px}
+nav{display:flex;gap:6px;background:var(--card);border-radius:16px;padding:5px;margin-bottom:14px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+nav a{flex:1;text-align:center;padding:10px 6px;border-radius:12px;color:var(--muted);text-decoration:none;font-weight:700;font-size:14px}
+nav a.on{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff}
+.card{background:var(--card);border-radius:20px;padding:20px;margin-bottom:14px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.hide{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.chip{border:2px solid var(--c);background:transparent;color:var(--text);padding:8px 14px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer}
+.chip.on{background:var(--c);color:#fff}
+.clock{font-size:60px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums;margin:8px 0 16px;background:linear-gradient(135deg,var(--b),var(--p));-webkit-background-clip:text;background-clip:text;color:transparent}
+.row{display:flex;gap:10px}
+button.b{flex:1;border:0;border-radius:16px;padding:16px;font-size:17px;font-weight:800;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--g),var(--b))}
+button.b.stop{background:linear-gradient(135deg,var(--o),var(--p2))}
+.goal{background:linear-gradient(135deg,#fff7e0,#ffe4f1);color:#2b2140;text-align:center}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .goal{background:linear-gradient(135deg,#3a2a55,#4a2242);color:#fff}}
+:root[data-theme="dark"] .goal{background:linear-gradient(135deg,#3a2a55,#4a2242);color:#fff}
+.goal .n{font-size:40px;font-weight:800;line-height:1.1}
+.goal small{display:block;opacity:.85;margin-top:4px}
+.big{font-size:88px;font-weight:900;text-align:center;line-height:1;margin:6px 0;background:linear-gradient(135deg,var(--p),var(--p2),var(--o));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{text-align:center;color:var(--muted)}
+.bar{height:14px;background:var(--line);border-radius:99px;overflow:hidden;margin:14px 0 6px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--g),var(--o),var(--p2));width:0;transition:width .6s}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{text-align:center;border-radius:14px;padding:12px;background:var(--bg2)}.stat b{display:block;font-size:26px}.stat span{color:var(--muted);font-size:13px}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border:0}
+.item small{color:var(--muted);display:block}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:var(--c)}
+.x{background:none;border:0;color:var(--muted);font-size:22px;cursor:pointer}
+.toast{text-align:center;font-weight:700;min-height:24px;margin-top:12px;color:var(--g)}
+.f{display:grid;gap:10px;margin-top:12px}.f label{font-size:13px;color:var(--muted);display:block;margin-bottom:4px}.f input,.f select{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font-size:16px}.f .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.save{text-align:center;font-size:12px;color:var(--muted);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <h1>📚 IELTS Study Tracker</h1>
+    <p id="quote"></p>
+  </div>
+  <nav>
+    <a href="#timer" id="n-timer">⏱ Timer</a>
+    <a href="#total" id="n-total">🏆 My Hours</a>
+    <a href="#history" id="n-history">🗓 History</a>
+  </nav>
+
+  <section id="p-timer">
+    <div class="card goal">
+      <div>🎯 Goal: 40 hours before 28 November</div>
+      <div class="n" id="gLeft">40h left</div>
+      <small id="gDays"></small>
+      <small id="gPace"></small>
+    </div>
+    <div class="card">
+      <div class="chips" id="chips"></div>
+      <div class="clock" id="clock">00:00:00</div>
+      <div class="row">
+        <button class="b" id="start">▶ Start studying</button>
+        <button class="b stop hide" id="finish">✔ Finish &amp; save</button>
+      </div>
+      <div class="toast" id="toast"></div>
+      <div class="save" id="saveState"></div>
+    </div>
+  </section>
+
+  <section id="p-total" class="hide">
+    <div class="card">
+      <div class="sub">Total hours studied</div>
+      <div class="big" id="bigHours">0.0</div>
+      <div class="sub" id="hm">0m</div>
+      <div class="bar"><i id="goalBar"></i></div>
+      <div class="sub" id="goalTxt"></div>
+    </div>
+    <div class="card stats">
+      <div class="stat"><b id="sSessions">0</b><span>sessions</span></div>
+      <div class="stat"><b id="sDays">0</b><span>study days</span></div>
+      <div class="stat"><b id="sStreak">0</b><span>day streak 🔥</span></div>
+      <div class="stat"><b id="sAvg">0m</b><span>avg per session</span></div>
+    </div>
+    <div class="card"><b>By skill</b><div id="bySkill"></div></div>
+  </section>
+
+  <section id="p-history" class="hide">
+    <div class="card" id="editor" style="display:none"></div>
+    <button class="b" id="addBtn" style="width:100%;margin-bottom:14px">＋ Add a missed session</button>
+    <div class="card" id="list"></div>
+    <div class="card"><b>Backup</b><p class="sub" style="margin:8px 0 12px">Your data lives in this browser. Download a backup now and then, and import it on another device.</p><div class="row"><button class="b" id="exp">⬇ Download backup</button><button class="b stop" id="imp">⬆ Import backup</button></div><input type="file" id="file" accept="application/json" class="hide"></div>
+  </section>
+</div>
+
+<script>
+var SUBJECTS=[["Listening","#3b82f6"],["Reading","#10b981"],["Writing","#ec4899"],["Speaking","#f59e0b"],["Full test","#7c3aed"],["Review","#14b8a6"]];
+var COLOR={};SUBJECTS.forEach(function(s){COLOR[s[0]]=s[1];});
+var QUOTES=[
+"Every minute you log brings band 7.5 closer. Keep going! 🌟",
+"You don’t have to feel ready. You just have to press start. 🚀",
+"Small daily sessions beat big rare ones. Protect your streak! 🔥",
+"Each mistake you understand is a mark you won’t lose on test day. ✨",
+"Future you, holding that result, is so glad you studied today. 💜",
+"40 hours is just one focused session at a time. You’ve got this! 💪"
+];
+var GOAL_HOURS=40, GOAL_DATE=new Date(2026,10,28,23,59,59);
+var sessions=[], timer={startedAt:null,subject:"Listening"}, tick=null;
+
+function $(id){return document.getElementById(id);}
+function pad(n){return n<10?"0"+n:""+n;}
+function fmtClock(s){return pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60);}
+function fmtHM(s){var h=Math.floor(s/3600),m=Math.round(s%3600/60);if(m===60){h++;m=0;}return h>0?h+"h "+m+"m":m+"m";}
+function dayKey(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function total(){return sessions.reduce(function(a,s){return a+s.secs;},0);}
+
+function loadLocal(){
+  try{var s=localStorage.getItem("ielts_sessions");if(s){var a=JSON.parse(s);if(Array.isArray(a))sessions=a;}}catch(e){}
+  try{var t=localStorage.getItem("ielts_timer");if(t){var o=JSON.parse(t);if(o&&typeof o==="object")timer=o;}}catch(e){}
+}
+function persist(){
+  try{localStorage.setItem("ielts_sessions",JSON.stringify(sessions));localStorage.setItem("ielts_timer",JSON.stringify(timer));}catch(e){}
+  setSave("💾 Saved on this device");
+}
+function setSave(t){$("saveState").textContent=t;}
+
+function renderChips(){
+  var h="";
+  SUBJECTS.forEach(function(s){h+='<button class="chip'+(s[0]===timer.subject?" on":"")+'" style="--c:'+s[1]+'" data-s="'+s[0]+'">'+s[0]+'</button>';});
+  $("chips").innerHTML=h;
+  Array.prototype.forEach.call($("chips").children,function(c){
+    c.onclick=function(){if(timer.startedAt)return;timer.subject=c.getAttribute("data-s");persist();renderChips();};
+  });
+}
+function elapsed(){return timer.startedAt?Math.floor((Date.now()-timer.startedAt)/1000):0;}
+function renderClock(){$("clock").textContent=fmtClock(elapsed());}
+function renderTimerState(){
+  var run=!!timer.startedAt;
+  $("start").classList.toggle("hide",run);
+  $("finish").classList.toggle("hide",!run);
+  if(run&&!tick)tick=setInterval(renderClock,500);
+  if(!run&&tick){clearInterval(tick);tick=null;}
+  renderClock();
+}
+$("start").onclick=function(){
+  timer.startedAt=Date.now();persist();
+  $("toast").textContent="Timer running. Focus on "+timer.subject+"! 💪";
+  renderTimerState();renderChips();
+};
+$("finish").onclick=function(){
+  var secs=elapsed();
+  timer.startedAt=null;
+  if(secs<5){$("toast").textContent="That was too short to save. Try again!";}
+  else{
+    sessions.push({id:Date.now(),date:new Date().toISOString(),secs:secs,subject:timer.subject});
+    var left=Math.max(0,GOAL_HOURS*3600-total()),days=daysLeft();
+    $("toast").innerHTML="🎉 Saved "+fmtHM(secs)+" of "+esc(timer.subject)+"!<br>"+(left>0?"Only <b>"+fmtHM(left)+"</b> left · <b>"+days+" day"+(days===1?"":"s")+"</b> to go":"You reached your 40-hour goal! 🏆");
+  }
+  persist();renderTimerState();renderChips();renderAll();
+};
+
+function daysLeft(){return Math.max(0,Math.ceil((GOAL_DATE-new Date())/86400000));}
+function renderGoal(){
+  var left=Math.max(0,GOAL_HOURS*3600-total()),days=daysLeft();
+  if(left===0){$("gLeft").textContent="Goal complete! 🏆";$("gDays").textContent="Amazing work. Keep polishing your weak spots.";$("gPace").textContent="";return;}
+  $("gLeft").textContent=fmtHM(left)+" left";
+  if(days>0){
+    $("gDays").textContent="⏳ "+days+" day"+(days===1?"":"s")+" until 28 November";
+    $("gPace").textContent="About "+fmtHM(Math.ceil(left/days))+" per day to make it";
+  }else{$("gDays").textContent="The 28 November deadline has passed.";$("gPace").textContent="";}
+}
+function streak(){
+  var days={};sessions.forEach(function(s){days[dayKey(new Date(s.date))]=1;});
+  var d=new Date(),n=0;
+  if(!days[dayKey(d)])d.setDate(d.getDate()-1);
+  while(days[dayKey(d)]){n++;d.setDate(d.getDate()-1);}
+  return n;
+}
+function renderTotal(){
+  var tot=total(),hrs=tot/3600;
+  $("bigHours").textContent=hrs.toFixed(1);
+  $("hm").textContent=fmtHM(tot)+" in total";
+  var pct=Math.min(100,hrs/GOAL_HOURS*100);
+  $("goalBar").style.width=pct+"%";
+  $("goalTxt").textContent=Math.round(pct)+"% of your "+GOAL_HOURS+"-hour goal";
+  var days={};sessions.forEach(function(s){days[dayKey(new Date(s.date))]=1;});
+  $("sSessions").textContent=sessions.length;
+  $("sDays").textContent=Object.keys(days).length;
+  $("sStreak").textContent=streak();
+  $("sAvg").textContent=sessions.length?fmtHM(Math.round(tot/sessions.length)):"0m";
+  var by={};sessions.forEach(function(s){by[s.subject]=(by[s.subject]||0)+s.secs;});
+  var h="";
+  Object.keys(by).sort(function(a,b){return by[b]-by[a];}).forEach(function(k){h+='<div class="item"><span><i class="dot" style="--c:'+(COLOR[k]||"#888")+'"></i>'+esc(k)+'</span><b>'+fmtHM(by[k])+'</b></div>';});
+  $("bySkill").innerHTML=h||'<p class="sub">Nothing yet. Start your first session!</p>';
+}
+function renderHistory(){
+  var h="";
+  sessions.slice().reverse().forEach(function(s){
+    var d=new Date(s.date);
+    h+='<div class="item"><div><b><i class="dot" style="--c:'+(COLOR[s.subject]||"#888")+'"></i>'+esc(s.subject)+'</b><small>'+d.toLocaleDateString(undefined,{weekday:"short",year:"numeric",month:"short",day:"numeric"})+' · '+d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"})+'</small></div><div><b>'+fmtHM(s.secs)+'</b> <button class="x" data-edit="'+s.id+'" aria-label="Edit">✏️</button><button class="x" data-id="'+s.id+'" aria-label="Delete">×</button></div></div>';
+  });
+  $("list").innerHTML=h||'<p class="sub">No sessions yet. Your study history will appear here.</p>';
+  Array.prototype.forEach.call($("list").querySelectorAll(".x[data-edit]"),function(b){
+    b.onclick=function(){openEditor(Number(b.getAttribute("data-edit")));};
+  });
+  Array.prototype.forEach.call($("list").querySelectorAll(".x[data-id]"),function(b){
+    b.onclick=function(){
+      if(!confirm("Delete this session?"))return;
+      var id=Number(b.getAttribute("data-id"));
+      sessions=sessions.filter(function(s){return s.id!==id;});persist();renderAll();
+    };
+  });
+}
+
+function localInput(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes());}
+function closeEditor(){$("editor").style.display="none";$("editor").innerHTML="";$("addBtn").classList.remove("hide");}
+function openEditor(id){
+  var ex=id?sessions.filter(function(x){return x.id===id;})[0]:null;
+  var subj=ex?ex.subject:timer.subject, d=ex?new Date(ex.date):new Date(), secs=ex?ex.secs:0;
+  var opts="";SUBJECTS.forEach(function(x){opts+='<option'+(x[0]===subj?" selected":"")+'>'+x[0]+'</option>';});
+  $("editor").innerHTML='<b>'+(ex?"Fix this session":"Add a missed session")+'</b><div class="f"><div><label>What did you study?</label><select id="eS">'+opts+'</select></div><div><label>Date and time</label><input type="datetime-local" id="eD" value="'+localInput(d)+'"></div><div class="two"><div><label>Hours</label><input type="number" id="eH" min="0" max="24" value="'+Math.floor(secs/3600)+'"></div><div><label>Minutes</label><input type="number" id="eM" min="0" max="59" value="'+Math.floor(secs%3600/60)+'"></div></div><div class="row"><button class="b" id="eSave">Save</button><button class="b stop" id="eCancel">Cancel</button></div></div>';
+  $("editor").style.display="block";$("addBtn").classList.add("hide");
+  $("eCancel").onclick=closeEditor;
+  $("eSave").onclick=function(){
+    var h=parseInt($("eH").value,10)||0,m=parseInt($("eM").value,10)||0,total_=h*3600+m*60;
+    var nd=new Date($("eD").value);
+    if(total_<=0){alert("Please enter a time longer than 0.");return;}
+    if(isNaN(nd.getTime())){alert("Please choose a valid date.");return;}
+    if(ex){ex.subject=$("eS").value;ex.date=nd.toISOString();ex.secs=total_;}
+    else sessions.push({id:Date.now(),date:nd.toISOString(),secs:total_,subject:$("eS").value});
+    sessions.sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+    persist();closeEditor();renderAll();
+  };
+  $("editor").scrollIntoView({behavior:"smooth",block:"start"});
+}
+$("addBtn").onclick=function(){openEditor(null);};
+function renderAll(){renderGoal();renderTotal();renderHistory();}
+function route(){
+  var h=(location.hash||"#timer").slice(1);
+  if(["timer","total","history"].indexOf(h)<0)h="timer";
+  ["timer","total","history"].forEach(function(p){
+    $("p-"+p).classList.toggle("hide",p!==h);
+    $("n-"+p).classList.toggle("on",p===h);
+  });
+}
+$("exp").onclick=function(){
+  var blob=new Blob([JSON.stringify({sessions:sessions},null,2)],{type:"application/json"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="ielts-backup-"+dayKey(new Date())+".json";
+  document.body.appendChild(a);a.click();a.remove();
+};
+$("imp").onclick=function(){$("file").click();};
+$("file").onchange=function(){
+  var f=this.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){
+    try{
+      var d=JSON.parse(r.result),m={};
+      if(!d||!Array.isArray(d.sessions))throw 0;
+      sessions.concat(d.sessions).forEach(function(x){if(x&&x.id&&x.secs)m[x.id]=x;});
+      sessions=Object.keys(m).map(function(k){return m[k];}).sort(function(x,y){return x.id-y.id;});
+      persist();renderAll();alert("Backup imported.");
+    }catch(e){alert("That file isn't a valid backup.");}
+  };
+  r.readAsText(f);this.value="";
+};
+window.addEventListener("hashchange",route);
+loadLocal();
+$("quote").textContent=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+renderChips();renderTimerState();renderAll();route();setSave("💾 Saved on this device");
+</script>
+</body>
+</html>
